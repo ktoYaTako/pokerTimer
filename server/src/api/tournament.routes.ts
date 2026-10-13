@@ -177,6 +177,18 @@ export async function registerTournamentRoutes(app: FastifyInstance) {
     }
   });
 
+  app.post<{ Params: { id: string } }>(
+    '/api/tournaments/:id/bounty/rebuy',
+    async (req, reply) => {
+      try {
+        const tournament = tournamentService.addBountyBox(req.params.id);
+        return reply.code(201).send(tournament);
+      } catch (error) {
+        return reply.code(400).send({ error: (error as Error).message });
+      }
+    }
+  );
+
   app.post<{ Params: { id: string }; Body: { eliminatedBoxId: string; eliminatorBoxId: string } }>(
     '/api/tournaments/:id/bounty/payments',
     async (req, reply) => {

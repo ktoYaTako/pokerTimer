@@ -242,6 +242,24 @@ export class TournamentService {
     return tournament;
   }
 
+  addBountyBox(id: string): Tournament {
+    const engine = tournamentRepository.getEngine(id);
+    if (!engine) {
+      throw new Error(`Tournament ${id} not found`);
+    }
+
+    try {
+      engine.addBountyBox();
+      const tournament = engine.getTournament();
+      tournamentRepository.update(id, tournament);
+      broadcast(id);
+      return tournament;
+    } catch (error) {
+      console.error('addBountyBox error:', error);
+      throw error;
+    }
+  }
+
   recordBountyPayment(id: string, eliminatedBoxId: string, eliminatorBoxId: string): any {
     const engine = tournamentRepository.getEngine(id);
     if (!engine) {

@@ -164,3 +164,12 @@ export async function renameBox(id: string, boxId: string, name: string): Promis
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
+
+export async function addBountyBox(id: string): Promise<Tournament> {
+  const res = await fetch(`${API_BASE}/tournaments/${id}/bounty/rebuy`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}

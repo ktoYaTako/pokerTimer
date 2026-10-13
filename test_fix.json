@@ -1,0 +1,12 @@
+{
+  "name": "Test Bounty Fix",
+  "levels": [
+    {
+      "type": "level",
+      "smallBlind": 10,
+      "bigBlind": 20,
+      "ante": 0,
+      "durationSeconds": 300
+    }
+  ]
+}

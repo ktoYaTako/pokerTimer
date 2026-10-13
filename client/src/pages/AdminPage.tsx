@@ -91,6 +91,15 @@ export function AdminPage() {
     }
   };
 
+  const handleAddBountyBox = async () => {
+    try {
+      await api.addBountyBox(id || '');
+      refetch();
+    } catch (err) {
+      alert((err as Error).message);
+    }
+  };
+
   const handleUndoElimination = async () => {
     try {
       await api.undoBountyPayment(id || '');
@@ -256,13 +265,16 @@ export function AdminPage() {
               onRecordElimination={() => setShowPaymentDialog(true)}
             />
 
-            {bountyPayments.length > 0 && (
-              <div className="bounty-actions">
+            <div className="bounty-actions">
+              <button className="btn-add-box" onClick={handleAddBountyBox}>
+                ➕ Add Box (Rebuy)
+              </button>
+              {bountyPayments.length > 0 && (
                 <button className="btn-undo-bounty" onClick={handleUndoElimination}>
                   ↶ Undo Last Elimination
                 </button>
-              </div>
-            )}
+              )}
+            </div>
           </>
         )}
       </section>

@@ -270,7 +270,7 @@ export class TournamentEngine {
       throw new Error('Cannot initialize bounty mode while tournament is running');
     }
 
-    const startingBountyPerBox = (config.buyInAmount * 0.5) / config.numberOfBoxes;
+    const startingBountyPerBox = config.buyInAmount * 0.5;
     const boxes: PlayerBox[] = [];
 
     for (let i = 1; i <= config.numberOfBoxes; i++) {
@@ -294,6 +294,26 @@ export class TournamentEngine {
     this.tournament.bountyConfig = undefined;
     this.tournament.playerBoxes = undefined;
     this.tournament.bountyPayments = undefined;
+  }
+
+  addBountyBox(): PlayerBox {
+    if (!this.tournament.bountyConfig || !this.tournament.playerBoxes) {
+      throw new Error('Bounty mode not enabled');
+    }
+
+    const startingBountyPerBox = this.tournament.bountyConfig.buyInAmount * 0.5;
+    const newBox: PlayerBox = {
+      id: uuidv4(),
+      name: `Box ${this.tournament.playerBoxes.length + 1}`,
+      currentBounty: startingBountyPerBox,
+      cashEarned: 0,
+      eliminations: 0,
+      startingBounty: startingBountyPerBox,
+      status: 'active',
+    };
+
+    this.tournament.playerBoxes.push(newBox);
+    return newBox;
   }
 
   recordElimination(eliminatedBoxId: string, eliminatorBoxId: string): { bountyTransferred: number; cashReward: number } {
