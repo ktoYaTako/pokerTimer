@@ -13,7 +13,7 @@ export function LevelEditorModal({ level, onSave, onClose }: LevelEditorModalPro
   const [type, setType] = useState<'level' | 'break'>(level?.type || 'level');
   const [smallBlind, setSmallBlind] = useState(level?.smallBlind || 25);
   const [bigBlind, setBigBlind] = useState(level?.bigBlind || 50);
-  const [ante, setAnte] = useState(level?.ante || 0);
+  const [ante, setAnte] = useState(level?.ante ?? 0);
   const [duration, setDuration] = useState(Math.floor((level?.durationSeconds || 900) / 60));
 
   const handleSave = () => {
