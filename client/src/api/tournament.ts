@@ -112,3 +112,55 @@ export async function reorderLevels(id: string, levels: any[]): Promise<Tourname
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
+
+export async function enableBountyMode(id: string, buyInAmount: number, numberOfBoxes: number): Promise<Tournament> {
+  const res = await fetch(`${API_BASE}/tournaments/${id}/bounty/enable`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ buyInAmount, numberOfBoxes }),
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function disableBountyMode(id: string): Promise<Tournament> {
+  const res = await fetch(`${API_BASE}/tournaments/${id}/bounty`, {
+    method: 'DELETE',
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function recordBountyPayment(id: string, eliminatedBoxId: string, eliminatorBoxId: string): Promise<any> {
+  const res = await fetch(`${API_BASE}/tournaments/${id}/bounty/payments`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ eliminatedBoxId, eliminatorBoxId }),
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function undoBountyPayment(id: string): Promise<any> {
+  const res = await fetch(`${API_BASE}/tournaments/${id}/bounty/undo`, {
+    method: 'POST',
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function getBountyLeaderboard(id: string): Promise<any[]> {
+  const res = await fetch(`${API_BASE}/tournaments/${id}/bounty/leaderboard`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function renameBox(id: string, boxId: string, name: string): Promise<Tournament> {
+  const res = await fetch(`${API_BASE}/tournaments/${id}/bounty/boxes/${boxId}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name }),
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}

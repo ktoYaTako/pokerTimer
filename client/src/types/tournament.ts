@@ -27,6 +27,35 @@ export interface TournamentState {
   pausedRemainingSeconds: number | null;
 }
 
+export interface BountyConfig {
+  enabled: boolean;
+  buyInAmount: number;
+  numberOfBoxes: number;
+  startedAt?: number;
+}
+
+export interface PlayerBox {
+  id: string;
+  name: string;
+  currentBounty: number;
+  cashEarned: number;
+  eliminations: number;
+  startingBounty: number;
+  status: 'active' | 'eliminated';
+}
+
+export interface BountyPayment {
+  id: string;
+  eliminatedBoxId: string;
+  eliminatedBoxName: string;
+  eliminatorBoxId: string;
+  eliminatorBoxName: string;
+  bountyTransferred: number;
+  cashReward: number;
+  timestamp: number;
+  levelIndex?: number;
+}
+
 export interface Tournament {
   id: string;
   name: string;
@@ -34,6 +63,9 @@ export interface Tournament {
   state: TournamentState;
   createdAt: number;
   remainingSeconds?: number;
+  bountyConfig?: BountyConfig;
+  playerBoxes?: PlayerBox[];
+  bountyPayments?: BountyPayment[];
 }
 
 export interface TournamentConfig {

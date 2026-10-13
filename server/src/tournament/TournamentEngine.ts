@@ -1,4 +1,5 @@
-import { Tournament, TournamentState, TournamentConfig, LevelConfig } from './tournament.types';
+import { Tournament, TournamentState, TournamentConfig, LevelConfig, BountyConfig, PlayerBox, BountyPayment } from './tournament.types';
+import { v4 as uuidv4 } from 'uuid';
 
 export class TournamentEngine {
   private tournament: Tournament;
@@ -262,5 +263,149 @@ export class TournamentEngine {
 
   setStateFromExternal(state: TournamentState): void {
     this.tournament.state = { ...state };
+  }
+
+  initializeBountyMode(config: BountyConfig): void {
+    if (this.tournament.state.status !== 'idle') {
+      throw new Error('Cannot initialize bounty mode while tournament is running');
+    }
+
+    const startingBountyPerBox = (config.buyInAmount * 0.5) / config.numberOfBoxes;
+    const boxes: PlayerBox[] = [];
+
+    for (let i = 1; i <= config.numberOfBoxes; i++) {
+      boxes.push({
+        id: uuidv4(),
+        name: `Box ${i}`,
+        currentBounty: startingBountyPerBox,
+        cashEarned: 0,
+        eliminations: 0,
+        startingBounty: startingBountyPerBox,
+        status: 'active',
+      });
+    }
+
+    this.tournament.bountyConfig = { ...config, startedAt: Date.now() };
+    this.tournament.playerBoxes = boxes;
+    this.tournament.bountyPayments = [];
+  }
+
+  disableBountyMode(): void {
+    this.tournament.bountyConfig = undefined;
+    this.tournament.playerBoxes = undefined;
+    this.tournament.bountyPayments = undefined;
+  }
+
+  recordElimination(eliminatedBoxId: string, eliminatorBoxId: string): { bountyTransferred: number; cashReward: number } {
+    if (!this.tournament.playerBoxes) {
+      throw new Error('Bounty mode not enabled');
+    }
+
+    const eliminatedBox = this.tournament.playerBoxes.find(b => b.id === eliminatedBoxId);
+    const eliminatorBox = this.tournament.playerBoxes.find(b => b.id === eliminatorBoxId);
+
+    if (!eliminatedBox || !eliminatorBox) {
+      throw new Error('Invalid box ID');
+    }
+
+    if (eliminatedBox.status === 'eliminated') {
+      throw new Error('Cannot eliminate already eliminated box');
+    }
+
+    if (eliminatedBox.id === eliminatorBox.id) {
+      throw new Error('A box cannot eliminate itself');
+    }
+
+    const bountyTransferred = eliminatedBox.currentBounty * 0.5;
+    const cashReward = eliminatedBox.currentBounty * 0.5;
+
+    eliminatorBox.currentBounty += bountyTransferred;
+    eliminatorBox.cashEarned += cashReward;
+    eliminatorBox.eliminations += 1;
+
+    eliminatedBox.status = 'eliminated';
+
+    const payment: BountyPayment = {
+      id: uuidv4(),
+      eliminatedBoxId,
+      eliminatedBoxName: eliminatedBox.name,
+      eliminatorBoxId,
+      eliminatorBoxName: eliminatorBox.name,
+      bountyTransferred,
+      cashReward,
+      timestamp: Date.now(),
+      levelIndex: this.tournament.state.currentLevelIndex,
+    };
+
+    this.tournament.bountyPayments!.push(payment);
+
+    return { bountyTransferred, cashReward };
+  }
+
+  getBountyLeaderboard(): Array<{
+    id: string;
+    name: string;
+    currentBounty: number;
+    cashEarned: number;
+    eliminations: number;
+    startingBounty: number;
+    status: string;
+    percentageOfStarting: number;
+  }> {
+    if (!this.tournament.playerBoxes) {
+      return [];
+    }
+
+    return this.tournament.playerBoxes
+      .map(box => ({
+        id: box.id,
+        name: box.name,
+        currentBounty: box.currentBounty,
+        cashEarned: box.cashEarned,
+        eliminations: box.eliminations,
+        startingBounty: box.startingBounty,
+        status: box.status,
+        percentageOfStarting: (box.currentBounty / box.startingBounty) * 100,
+      }))
+      .sort((a, b) => b.currentBounty - a.currentBounty);
+  }
+
+  undoLastElimination(): BountyPayment | null {
+    if (!this.tournament.bountyPayments || this.tournament.bountyPayments.length === 0) {
+      return null;
+    }
+
+    const lastPayment = this.tournament.bountyPayments.pop()!;
+    const eliminatorBox = this.tournament.playerBoxes!.find(b => b.id === lastPayment.eliminatorBoxId);
+    const eliminatedBox = this.tournament.playerBoxes!.find(b => b.id === lastPayment.eliminatedBoxId);
+
+    if (eliminatorBox) {
+      eliminatorBox.currentBounty -= lastPayment.bountyTransferred;
+      eliminatorBox.cashEarned -= lastPayment.cashReward;
+      eliminatorBox.eliminations -= 1;
+    }
+
+    if (eliminatedBox) {
+      eliminatedBox.status = 'active';
+    }
+
+    return lastPayment;
+  }
+
+  renameBox(boxId: string, newName: string): void {
+    if (!this.tournament.playerBoxes) {
+      throw new Error('Bounty mode not enabled');
+    }
+
+    const box = this.tournament.playerBoxes.find(b => b.id === boxId);
+    if (!box) {
+      throw new Error('Box not found');
+    }
+
+    if (!newName || newName.trim().length === 0) {
+      throw new Error('Box name cannot be empty');
+    }
+
+    box.name = newName.trim();
   }
 }

@@ -213,6 +213,86 @@ export class TournamentService {
 
     return tournament;
   }
+
+  enableBountyMode(id: string, config: any): Tournament {
+    const engine = tournamentRepository.getEngine(id);
+    if (!engine) {
+      throw new Error(`Tournament ${id} not found`);
+    }
+
+    engine.initializeBountyMode(config);
+    const tournament = engine.getTournament();
+    tournamentRepository.update(id, tournament);
+    broadcast(id);
+
+    return tournament;
+  }
+
+  disableBountyMode(id: string): Tournament {
+    const engine = tournamentRepository.getEngine(id);
+    if (!engine) {
+      throw new Error(`Tournament ${id} not found`);
+    }
+
+    engine.disableBountyMode();
+    const tournament = engine.getTournament();
+    tournamentRepository.update(id, tournament);
+    broadcast(id);
+
+    return tournament;
+  }
+
+  recordBountyPayment(id: string, eliminatedBoxId: string, eliminatorBoxId: string): any {
+    const engine = tournamentRepository.getEngine(id);
+    if (!engine) {
+      throw new Error(`Tournament ${id} not found`);
+    }
+
+    engine.recordElimination(eliminatedBoxId, eliminatorBoxId);
+    const tournament = engine.getTournament();
+    tournamentRepository.update(id, tournament);
+    broadcast(id);
+
+    const lastPayment = tournament.bountyPayments?.[tournament.bountyPayments.length - 1];
+    return lastPayment;
+  }
+
+  undoBountyPayment(id: string): any {
+    const engine = tournamentRepository.getEngine(id);
+    if (!engine) {
+      throw new Error(`Tournament ${id} not found`);
+    }
+
+    const payment = engine.undoLastElimination();
+    const tournament = engine.getTournament();
+    tournamentRepository.update(id, tournament);
+    broadcast(id);
+
+    return payment;
+  }
+
+  getBountyLeaderboard(id: string): any {
+    const engine = tournamentRepository.getEngine(id);
+    if (!engine) {
+      throw new Error(`Tournament ${id} not found`);
+    }
+
+    return engine.getBountyLeaderboard();
+  }
+
+  renameBox(id: string, boxId: string, newName: string): Tournament {
+    const engine = tournamentRepository.getEngine(id);
+    if (!engine) {
+      throw new Error(`Tournament ${id} not found`);
+    }
+
+    engine.renameBox(boxId, newName);
+    const tournament = engine.getTournament();
+    tournamentRepository.update(id, tournament);
+    broadcast(id);
+
+    return tournament;
+  }
 }
 
 export const tournamentService = new TournamentService();

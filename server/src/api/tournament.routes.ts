@@ -151,4 +151,75 @@ export async function registerTournamentRoutes(app: FastifyInstance) {
       }
     }
   );
+
+  app.post<{ Params: { id: string }; Body: { buyInAmount: number; numberOfBoxes: number } }>(
+    '/api/tournaments/:id/bounty/enable',
+    async (req, reply) => {
+      try {
+        const tournament = tournamentService.enableBountyMode(req.params.id, {
+          enabled: true,
+          buyInAmount: req.body.buyInAmount,
+          numberOfBoxes: req.body.numberOfBoxes,
+        });
+        return reply.send(tournament);
+      } catch (error) {
+        return reply.code(400).send({ error: (error as Error).message });
+      }
+    }
+  );
+
+  app.delete<{ Params: { id: string } }>('/api/tournaments/:id/bounty', async (req, reply) => {
+    try {
+      const tournament = tournamentService.disableBountyMode(req.params.id);
+      return reply.send(tournament);
+    } catch (error) {
+      return reply.code(400).send({ error: (error as Error).message });
+    }
+  });
+
+  app.post<{ Params: { id: string }; Body: { eliminatedBoxId: string; eliminatorBoxId: string } }>(
+    '/api/tournaments/:id/bounty/payments',
+    async (req, reply) => {
+      try {
+        const payment = tournamentService.recordBountyPayment(
+          req.params.id,
+          req.body.eliminatedBoxId,
+          req.body.eliminatorBoxId
+        );
+        return reply.code(201).send(payment);
+      } catch (error) {
+        return reply.code(400).send({ error: (error as Error).message });
+      }
+    }
+  );
+
+  app.post<{ Params: { id: string } }>('/api/tournaments/:id/bounty/undo', async (req, reply) => {
+    try {
+      const payment = tournamentService.undoBountyPayment(req.params.id);
+      return reply.send(payment);
+    } catch (error) {
+      return reply.code(400).send({ error: (error as Error).message });
+    }
+  });
+
+  app.get<{ Params: { id: string } }>('/api/tournaments/:id/bounty/leaderboard', async (req, reply) => {
+    try {
+      const leaderboard = tournamentService.getBountyLeaderboard(req.params.id);
+      return reply.send(leaderboard);
+    } catch (error) {
+      return reply.code(400).send({ error: (error as Error).message });
+    }
+  });
+
+  app.patch<{ Params: { id: string; boxId: string }; Body: { name: string } }>(
+    '/api/tournaments/:id/bounty/boxes/:boxId',
+    async (req, reply) => {
+      try {
+        const tournament = tournamentService.renameBox(req.params.id, req.params.boxId, req.body.name);
+        return reply.send(tournament);
+      } catch (error) {
+        return reply.code(400).send({ error: (error as Error).message });
+      }
+    }
+  );
 }
