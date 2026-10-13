@@ -114,12 +114,12 @@ export async function registerTournamentRoutes(app: FastifyInstance) {
     }
   );
 
-  app.delete<{ Params: { id: string; levelIndex: string } }>(
+  app.patch<{ Params: { id: string; levelIndex: string }; Body: Partial<any> }>(
     '/api/tournaments/:id/levels/:levelIndex',
     async (req, reply) => {
       try {
         const index = parseInt(req.params.levelIndex, 10);
-        const tournament = tournamentService.removeLevel(req.params.id, index);
+        const tournament = tournamentService.updateLevel(req.params.id, index, req.body);
         return reply.send(tournament);
       } catch (error) {
         return reply.code(400).send({ error: (error as Error).message });
@@ -127,12 +127,12 @@ export async function registerTournamentRoutes(app: FastifyInstance) {
     }
   );
 
-  app.patch<{ Params: { id: string; levelIndex: string }; Body: Partial<any> }>(
+  app.delete<{ Params: { id: string; levelIndex: string } }>(
     '/api/tournaments/:id/levels/:levelIndex',
     async (req, reply) => {
       try {
         const index = parseInt(req.params.levelIndex, 10);
-        const tournament = tournamentService.updateLevel(req.params.id, index, req.body);
+        const tournament = tournamentService.removeLevel(req.params.id, index);
         return reply.send(tournament);
       } catch (error) {
         return reply.code(400).send({ error: (error as Error).message });
