@@ -222,11 +222,6 @@ export class TournamentService {
 
     engine.initializeBountyMode(config);
     const tournament = engine.getTournament();
-    console.log('enableBountyMode - tournament after init:', {
-      bountyConfig: tournament.bountyConfig,
-      playerBoxesCount: tournament.playerBoxes?.length,
-      playerBoxes: tournament.playerBoxes
-    });
     tournamentRepository.update(id, tournament);
     broadcast(id);
 
