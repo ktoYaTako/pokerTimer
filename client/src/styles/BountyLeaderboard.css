@@ -1,0 +1,138 @@
+.bounty-leaderboard {
+  background: #2d2d2d;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.leaderboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.leaderboard-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #fff;
+}
+
+.btn-record {
+  padding: 10px 16px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-record:hover {
+  background: #45a049;
+}
+
+.leaderboard-table {
+  overflow-x: auto;
+}
+
+.table-header {
+  display: grid;
+  grid-template-columns: 50px 120px 100px 80px 70px 90px 70px;
+  gap: 8px;
+  padding: 12px;
+  background: #1a1a1a;
+  border-radius: 6px 6px 0 0;
+  border-bottom: 2px solid #4CAF50;
+  font-weight: 600;
+  font-size: 12px;
+  color: #aaa;
+  text-transform: uppercase;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 50px 120px 100px 80px 70px 90px 70px;
+  gap: 8px;
+  padding: 12px;
+  background: #1a1a1a;
+  border-bottom: 1px solid #444;
+  align-items: center;
+  font-size: 13px;
+  color: #fff;
+  transition: all 0.2s;
+}
+
+.table-row:hover {
+  background: #222;
+}
+
+.table-row.eliminated {
+  opacity: 0.5;
+  background: #1a1a1a;
+}
+
+.col-rank {
+  text-align: center;
+  font-size: 18px;
+}
+
+.col-name .editable {
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.col-name .editable:hover {
+  background: rgba(76, 175, 80, 0.1);
+  color: #4CAF50;
+}
+
+.col-name input {
+  width: 100%;
+  padding: 4px 8px;
+  background: #444;
+  border: 1px solid #4CAF50;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 13px;
+}
+
+.col-name input:focus {
+  outline: none;
+  border-color: #45a049;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
+}
+
+.col-bounty,
+.col-cash,
+.col-elims,
+.col-percent {
+  text-align: right;
+}
+
+.col-bounty {
+  color: #4CAF50;
+  font-weight: 600;
+}
+
+.col-cash {
+  color: #2196F3;
+  font-weight: 600;
+}
+
+.col-elims {
+  text-align: center;
+}
+
+.col-percent {
+  color: #ff9800;
+}
+
+.col-status {
+  text-align: center;
+}
