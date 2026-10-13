@@ -1,0 +1,73 @@
+.home-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+}
+
+.home-container {
+  background: #2d2d2d;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 100%;
+}
+
+.home-container h1 {
+  font-size: 32px;
+  margin-bottom: 40px;
+  text-align: center;
+  color: #fff;
+}
+
+.create-tournament {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.create-tournament input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid #444;
+  border-radius: 6px;
+  background: #1a1a1a;
+  color: #fff;
+  font-size: 16px;
+}
+
+.create-tournament input:focus {
+  outline: none;
+  border-color: #4CAF50;
+}
+
+.create-tournament button {
+  padding: 12px 24px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.create-tournament button:hover:not(:disabled) {
+  background: #45a049;
+}
+
+.create-tournament button:disabled {
+  background: #666;
+  cursor: not-allowed;
+}
+
+.home-page .error {
+  background: #d32f2f;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 6px;
+  text-align: center;
+}

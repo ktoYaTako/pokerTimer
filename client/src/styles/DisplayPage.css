@@ -1,0 +1,166 @@
+.display-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: #000;
+  padding: 20px;
+}
+
+.display-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+  max-width: 100%;
+}
+
+.display-timer-section {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.timer {
+  font-size: clamp(80px, 25vw, 400px);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #4CAF50;
+  text-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
+  font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+  letter-spacing: 0.1em;
+}
+
+.display-level-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: clamp(20px, 5vw, 40px);
+}
+
+.level-display {
+  text-align: center;
+  width: 100%;
+}
+
+.level-number {
+  font-size: clamp(24px, 8vw, 120px);
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: clamp(10px, 3vw, 30px);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.level-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(15px, 4vw, 40px);
+}
+
+.blinds {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: clamp(15px, 3vw, 30px);
+  font-size: clamp(36px, 12vw, 200px);
+  font-weight: 700;
+  color: #fff;
+}
+
+.separator {
+  color: #999;
+  margin: 0 clamp(5px, 1vw, 10px);
+}
+
+.small-blind,
+.big-blind {
+  font-variant-numeric: tabular-nums;
+}
+
+.ante {
+  font-size: clamp(20px, 6vw, 80px);
+  color: #4CAF50;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.break-info {
+  font-size: clamp(40px, 15vw, 200px);
+  font-weight: 700;
+  color: #ff9800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.next-level {
+  margin-top: clamp(20px, 5vw, 50px);
+  opacity: 0.7;
+}
+
+.next-label {
+  font-size: clamp(16px, 4vw, 40px);
+  color: #999;
+  text-transform: uppercase;
+  margin-bottom: clamp(5px, 2vw, 15px);
+  letter-spacing: 0.05em;
+}
+
+.next-blinds {
+  font-size: clamp(24px, 7vw, 80px);
+  color: #666;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.next-break {
+  font-size: clamp(24px, 8vw, 80px);
+  color: #666;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.connection-indicator {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #d32f2f;
+  transition: background 0.3s;
+}
+
+.connection-indicator.connected {
+  background: #4CAF50;
+}
+
+.display-error,
+.display-loading {
+  font-size: 32px;
+  color: #fff;
+  text-align: center;
+}
+
+@media (max-aspect-ratio: 1 / 1) {
+  .display-container {
+    flex-direction: column;
+  }
+
+  .display-timer-section {
+    flex: 1;
+  }
+
+  .display-level-section {
+    flex: 1;
+  }
+}

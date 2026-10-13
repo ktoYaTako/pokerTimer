@@ -1,0 +1,6 @@
+
+> poker-timer-server@0.1.0 dev
+> node --import tsx src/server.ts
+
+{"level":30,"time":1791904768360,"pid":13260,"hostname":"DESKTOP-E0DVQ39","msg":"Server listening at http://0.0.0.0:3000"}
+Server running at http://0.0.0.0:3000
