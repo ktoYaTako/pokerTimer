@@ -291,6 +291,82 @@
   font-weight: 600;
 }
 
+.bounty-section {
+  background: #2d2d2d;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.bounty-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.bounty-header h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.bounty-controls {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.checkbox-label input[type="checkbox"] {
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+}
+
+.btn-edit-bounty {
+  padding: 8px 14px;
+  background: #666;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-edit-bounty:hover {
+  background: #777;
+}
+
+.bounty-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-undo-bounty {
+  padding: 10px 16px;
+  background: #666;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-undo-bounty:hover {
+  background: #777;
+}
+
 .error-message {
   background: #d32f2f;
   color: white;

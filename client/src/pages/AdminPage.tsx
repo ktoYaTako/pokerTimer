@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTournament, useTournamentActions } from '../hooks/useTournament';
 import * as api from '../api/tournament';
+import { BountyConfigModal } from '../components/BountyConfigModal';
+import { BountyLeaderboard } from '../components/BountyLeaderboard';
+import { BountyPaymentDialog } from '../components/BountyPaymentDialog';
 import '../styles/AdminPage.css';
 
 export function AdminPage() {
@@ -11,6 +14,8 @@ export function AdminPage() {
   const actions = useTournamentActions(id || '');
   const [editingName, setEditingName] = useState(false);
   const [newName, setNewName] = useState('');
+  const [showBountyConfig, setShowBountyConfig] = useState(false);
+  const [showPaymentDialog, setShowPaymentDialog] = useState(false);
 
   if (loading) return <div>Loading...</div>;
   if (error || !tournament) return <div>Error: {error}</div>;
@@ -55,8 +60,60 @@ export function AdminPage() {
     }
   };
 
+  const handleEnableBounty = async (buyInAmount: number, numberOfBoxes: number) => {
+    try {
+      await api.enableBountyMode(id || '', buyInAmount, numberOfBoxes);
+      setShowBountyConfig(false);
+      refetch();
+    } catch (err) {
+      alert((err as Error).message);
+    }
+  };
+
+  const handleDisableBounty = async () => {
+    if (confirm('Disable bounty mode? This cannot be undone.')) {
+      try {
+        await api.disableBountyMode(id || '');
+        refetch();
+      } catch (err) {
+        alert((err as Error).message);
+      }
+    }
+  };
+
+  const handleRecordElimination = async (eliminatedBoxId: string, eliminatorBoxId: string) => {
+    try {
+      await api.recordBountyPayment(id || '', eliminatedBoxId, eliminatorBoxId);
+      setShowPaymentDialog(false);
+      refetch();
+    } catch (err) {
+      alert((err as Error).message);
+    }
+  };
+
+  const handleUndoElimination = async () => {
+    try {
+      await api.undoBountyPayment(id || '');
+      refetch();
+    } catch (err) {
+      alert((err as Error).message);
+    }
+  };
+
+  const handleRenameBox = async (boxId: string, newName: string) => {
+    try {
+      await api.renameBox(id || '', boxId, newName);
+      refetch();
+    } catch (err) {
+      alert((err as Error).message);
+    }
+  };
+
   const currentLevel = tournament.levels[tournament.state.currentLevelIndex];
   const displayUrl = `${window.location.origin}/display/${id}`;
+  const bountyEnabled = tournament.bountyConfig?.enabled;
+  const playerBoxes = tournament.playerBoxes || [];
+  const bountyPayments = tournament.bountyPayments || [];
 
   return (
     <div className="admin-page">
@@ -164,6 +221,52 @@ export function AdminPage() {
         )}
       </section>
 
+      <section className="bounty-section">
+        <div className="bounty-header">
+          <h2>Bounty Hunt Mode</h2>
+          <div className="bounty-controls">
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={bountyEnabled || false}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setShowBountyConfig(true);
+                  } else {
+                    handleDisableBounty();
+                  }
+                }}
+                disabled={tournament.state.status !== 'idle'}
+              />
+              Enabled
+            </label>
+            {bountyEnabled && (
+              <button className="btn-edit-bounty" onClick={() => setShowBountyConfig(true)}>
+                ⚙️ Configure
+              </button>
+            )}
+          </div>
+        </div>
+
+        {bountyEnabled && playerBoxes.length > 0 && (
+          <>
+            <BountyLeaderboard
+              boxes={playerBoxes}
+              onRenameBox={handleRenameBox}
+              onRecordElimination={() => setShowPaymentDialog(true)}
+            />
+
+            {bountyPayments.length > 0 && (
+              <div className="bounty-actions">
+                <button className="btn-undo-bounty" onClick={handleUndoElimination}>
+                  ↶ Undo Last Elimination
+                </button>
+              </div>
+            )}
+          </>
+        )}
+      </section>
+
       <section className="levels-list">
         <h2>Tournament Structure</h2>
         <div className="levels">
@@ -184,6 +287,31 @@ export function AdminPage() {
           ))}
         </div>
       </section>
+
+      {showBountyConfig && (
+        <BountyConfigModal
+          bountyConfig={
+            bountyEnabled
+              ? {
+                  buyInAmount: tournament.bountyConfig?.buyInAmount || 1000,
+                  numberOfBoxes: tournament.bountyConfig?.numberOfBoxes || 5,
+                }
+              : undefined
+          }
+          onSave={handleEnableBounty}
+          onClose={() => setShowBountyConfig(false)}
+        />
+      )}
+
+      {showPaymentDialog && playerBoxes.length > 0 && (
+        <BountyPaymentDialog
+          boxes={playerBoxes}
+          onConfirm={handleRecordElimination}
+          onUndo={handleUndoElimination}
+          onClose={() => setShowPaymentDialog(false)}
+          hasPayments={bountyPayments.length > 0}
+        />
+      )}
 
       {actions.error && <div className="error-message">{actions.error}</div>}
     </div>
