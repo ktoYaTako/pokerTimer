@@ -40,8 +40,7 @@ export function useRealtimeTournament(tournamentId: string) {
 
     // WebSocket connection
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    // Подключаемся к localhost:3001 (где запущен backend)
-    const wsUrl = `${protocol}//localhost:3001/ws/tournaments/${tournamentId}`;
+    const wsUrl = `${protocol}//localhost:3000/ws/tournaments/${tournamentId}`;
     console.log("[WebSocket] Connecting to:", wsUrl);
 
     let ws: WebSocket | null = null;
