@@ -102,6 +102,11 @@ export function AdminPage() {
         <div className="status">
           <strong>Status:</strong> {tournament.state.status.toUpperCase()}
         </div>
+        {tournament.state.status === 'idle' && (
+          <button onClick={() => navigate(`/edit/${id}`)} className="btn-edit-structure">
+            EDIT STRUCTURE
+          </button>
+        )}
         <div className="control-buttons">
           {tournament.state.status === 'idle' && (
             <button onClick={handleStart} className="btn-start">

@@ -173,6 +173,70 @@ export class TournamentEngine {
     }
   }
 
+  addLevel(level: LevelConfig, index?: number): void {
+    if (this.tournament.state.status !== 'idle') {
+      throw new Error('Cannot add levels while tournament is running');
+    }
+
+    if (index === undefined) {
+      this.tournament.levels.push(level);
+    } else {
+      if (index < 0 || index > this.tournament.levels.length) {
+        throw new Error('Invalid level index for insertion');
+      }
+      this.tournament.levels.splice(index, 0, level);
+    }
+
+    this.validate();
+  }
+
+  removeLevel(index: number): void {
+    if (this.tournament.state.status !== 'idle') {
+      throw new Error('Cannot remove levels while tournament is running');
+    }
+
+    this.validateLevelIndex(index);
+
+    if (this.tournament.levels.length === 1) {
+      throw new Error('Tournament must have at least one level');
+    }
+
+    this.tournament.levels.splice(index, 1);
+
+    if (this.tournament.state.currentLevelIndex >= this.tournament.levels.length) {
+      this.tournament.state.currentLevelIndex = this.tournament.levels.length - 1;
+    }
+
+    this.validate();
+  }
+
+  updateLevel(index: number, updates: Partial<LevelConfig>): void {
+    if (this.tournament.state.status !== 'idle') {
+      throw new Error('Cannot update levels while tournament is running');
+    }
+
+    this.validateLevelIndex(index);
+
+    const level = this.tournament.levels[index];
+    const updated = { ...level, ...updates };
+
+    this.tournament.levels[index] = updated;
+    this.validate();
+  }
+
+  reorderLevels(newOrder: LevelConfig[]): void {
+    if (this.tournament.state.status !== 'idle') {
+      throw new Error('Cannot reorder levels while tournament is running');
+    }
+
+    if (newOrder.length !== this.tournament.levels.length) {
+      throw new Error('Invalid level count for reordering');
+    }
+
+    this.tournament.levels = newOrder;
+    this.validate();
+  }
+
   tick(nowMs: number): void {
     if (this.tournament.state.status !== 'running') {
       return;

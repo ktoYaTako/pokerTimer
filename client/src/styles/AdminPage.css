@@ -128,6 +128,24 @@
   color: #4CAF50;
 }
 
+.btn-edit-structure {
+  display: block;
+  width: 100%;
+  padding: 12px 24px;
+  background: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 15px;
+  transition: all 0.3s;
+}
+
+.btn-edit-structure:hover {
+  background: #0b7dda;
+}
+
 .control-buttons {
   display: flex;
   flex-wrap: wrap;

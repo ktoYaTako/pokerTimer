@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HomePage } from './pages/HomePage';
 import { AdminPage } from './pages/AdminPage';
 import { DisplayPage } from './pages/DisplayPage';
+import { EditTournamentPage } from './pages/EditTournamentPage';
 import './App.css';
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/admin/:id" element={<AdminPage />} />
+        <Route path="/edit/:id" element={<EditTournamentPage />} />
         <Route path="/display/:id" element={<DisplayPage />} />
       </Routes>
     </BrowserRouter>

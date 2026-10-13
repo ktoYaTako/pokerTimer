@@ -74,3 +74,41 @@ export async function listTournaments(): Promise<Tournament[]> {
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
+
+export async function addLevel(id: string, level: any, index?: number): Promise<Tournament> {
+  const res = await fetch(`${API_BASE}/tournaments/${id}/levels`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ level, index }),
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function removeLevel(id: string, levelIndex: number): Promise<Tournament> {
+  const res = await fetch(`${API_BASE}/tournaments/${id}/levels/${levelIndex}`, {
+    method: 'DELETE',
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function updateLevel(id: string, levelIndex: number, updates: Partial<any>): Promise<Tournament> {
+  const res = await fetch(`${API_BASE}/tournaments/${id}/levels/${levelIndex}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(updates),
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function reorderLevels(id: string, levels: any[]): Promise<Tournament> {
+  const res = await fetch(`${API_BASE}/tournaments/${id}/levels/reorder`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ levels }),
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}

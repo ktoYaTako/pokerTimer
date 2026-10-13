@@ -157,6 +157,62 @@ export class TournamentService {
     const tournament = engine.getTournament();
     tournamentRepository.update(id, tournament);
   }
+
+  addLevel(id: string, level: any, index?: number): Tournament {
+    const engine = tournamentRepository.getEngine(id);
+    if (!engine) {
+      throw new Error(`Tournament ${id} not found`);
+    }
+
+    engine.addLevel(level, index);
+    const tournament = engine.getTournament();
+    tournamentRepository.update(id, tournament);
+    broadcast(id);
+
+    return tournament;
+  }
+
+  removeLevel(id: string, index: number): Tournament {
+    const engine = tournamentRepository.getEngine(id);
+    if (!engine) {
+      throw new Error(`Tournament ${id} not found`);
+    }
+
+    engine.removeLevel(index);
+    const tournament = engine.getTournament();
+    tournamentRepository.update(id, tournament);
+    broadcast(id);
+
+    return tournament;
+  }
+
+  updateLevel(id: string, index: number, updates: Partial<any>): Tournament {
+    const engine = tournamentRepository.getEngine(id);
+    if (!engine) {
+      throw new Error(`Tournament ${id} not found`);
+    }
+
+    engine.updateLevel(index, updates);
+    const tournament = engine.getTournament();
+    tournamentRepository.update(id, tournament);
+    broadcast(id);
+
+    return tournament;
+  }
+
+  reorderLevels(id: string, newOrder: any[]): Tournament {
+    const engine = tournamentRepository.getEngine(id);
+    if (!engine) {
+      throw new Error(`Tournament ${id} not found`);
+    }
+
+    engine.reorderLevels(newOrder);
+    const tournament = engine.getTournament();
+    tournamentRepository.update(id, tournament);
+    broadcast(id);
+
+    return tournament;
+  }
 }
 
 export const tournamentService = new TournamentService();
