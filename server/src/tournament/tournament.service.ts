@@ -1,6 +1,14 @@
-import { v4 as uuidv4 } from 'uuid';
 import { tournamentRepository } from './tournament.repository';
 import { TournamentConfig, Tournament } from './tournament.types';
+
+function generateShortId(): string {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let id = '';
+  for (let i = 0; i < 6; i++) {
+    id += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return id;
+}
 
 let broadcastCallback: ((id: string) => void) | null = null;
 
@@ -16,7 +24,7 @@ function broadcast(id: string) {
 
 export class TournamentService {
   createTournament(config: TournamentConfig): Tournament {
-    const id = uuidv4();
+    const id = generateShortId();
     return tournamentRepository.create(id, config);
   }
 
