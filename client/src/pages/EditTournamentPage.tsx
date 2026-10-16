@@ -10,7 +10,7 @@ import '../styles/EditTournamentPage.css';
 export function EditTournamentPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { tournament, loading, error, refetch } = useTournament(id!);
+  const { tournament, loading, error } = useTournament(id!);
   const [name, setName] = useState('');
   const [levels, setLevels] = useState<any[]>([]);
   const [editingLevel, setEditingLevel] = useState<any | null>(null);
